@@ -1,51 +1,80 @@
 /**
  * backend/db/schema.js
  *
- * Defines and initializes the database tables used by the backend.
- * This file keeps database structure separate from server startup logic.
+ * Defines the database tables for OrderOps Dashboard.
+ *
+ * OrderOps is a marketplace sync dashboard inspired by a real business idea:
+ * keeping product listings, prices, inventory, images, and platform statuses
+ * consistent across multiple e-commerce sales channels.
  */
 
-// Import the shared SQLite database connection.
 const db = require("./database");
 
-/**
- * Creates all required database tables if they do not already exist.
- *
- * This function is safe to run every time the server starts because
- * CREATE TABLE IF NOT EXISTS will not overwrite an existing table.
- */
 function initializeDatabase() {
   db.serialize(() => {
     db.run(`
-      CREATE TABLE IF NOT EXISTS orders (
+      CREATE TABLE IF NOT EXISTS products (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
 
+        sku TEXT NOT NULL UNIQUE,
+        product_name TEXT NOT NULL,
+        brand TEXT,
+        category TEXT,
+
+        base_price REAL DEFAULT 0,
+        inventory_count INTEGER DEFAULT 0,
+
+        image_url TEXT,
+        image_status TEXT DEFAULT 'Not Checked',
+
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    db.run(`
+      CREATE TABLE IF NOT EXISTS marketplace_listings (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+        product_id INTEGER NOT NULL,
+
         marketplace TEXT NOT NULL,
-        order_number TEXT NOT NULL,
-        order_date TEXT,
-        customer_name TEXT,
-        state TEXT,
+        marketplace_sku TEXT,
+        listing_url TEXT,
 
-        sku TEXT,
-        item_name TEXT,
-        quantity INTEGER DEFAULT 0,
+        listing_price REAL DEFAULT 0,
+        listing_inventory INTEGER DEFAULT 0,
 
-        weight REAL DEFAULT 0,
-        length REAL DEFAULT 0,
-        width REAL DEFAULT 0,
-        height REAL DEFAULT 0,
+        listing_status TEXT DEFAULT 'Active',
+        sync_status TEXT DEFAULT 'Not Checked',
 
-        carrier TEXT,
-        shipping_status TEXT DEFAULT 'Pending',
-        tracking_number TEXT,
+        last_checked TEXT,
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
 
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        FOREIGN KEY (product_id) REFERENCES products(id)
+      )
+    `);
+
+    db.run(`
+      CREATE TABLE IF NOT EXISTS sync_issues (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+        product_id INTEGER NOT NULL,
+        listing_id INTEGER,
+
+        issue_type TEXT NOT NULL,
+        issue_severity TEXT DEFAULT 'Medium',
+        issue_status TEXT DEFAULT 'Open',
+        issue_notes TEXT,
+
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        resolved_at TEXT,
+
+        FOREIGN KEY (product_id) REFERENCES products(id),
+        FOREIGN KEY (listing_id) REFERENCES marketplace_listings(id)
       )
     `);
   });
 }
 
-// Export the initializer so server.js can run it when the API starts.
-module.exports = {
-  initializeDatabase,
-};
+module.exports = { initializeDatabase };
