@@ -10,6 +10,7 @@ const cors = require("cors");
 
 const { PORT } = require("./config/env");
 const { initializeDatabase } = require("./db/schema");
+const productsRoutes = require("./routes/productsRoutes");
 
 const app = express();
 
@@ -24,6 +25,8 @@ app.get("/", (req, res) => {
     project: "Marketplace Sync Dashboard",
   });
 });
+
+app.use("/api/products", productsRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({
