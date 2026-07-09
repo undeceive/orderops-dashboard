@@ -74,6 +74,23 @@ function initializeDatabase() {
         FOREIGN KEY (listing_id) REFERENCES marketplace_listings(id)
       )
     `);
+
+    db.run(`
+      CREATE TABLE IF NOT EXISTS orders (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+        marketplace TEXT NOT NULL,
+        marketplace_order_id TEXT NOT NULL UNIQUE,
+        customer_name TEXT,
+
+        order_status TEXT DEFAULT 'Pending',
+        total_amount REAL DEFAULT 0,
+
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
   });
 }
 

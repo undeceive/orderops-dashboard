@@ -11,6 +11,7 @@ const cors = require("cors");
 const { PORT } = require("./config/env");
 const { initializeDatabase } = require("./db/schema");
 const productsRoutes = require("./routes/productsRoutes");
+const ordersRoutes = require("./routes/ordersRoutes");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/products", productsRoutes);
+app.use("/api/orders", ordersRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({
