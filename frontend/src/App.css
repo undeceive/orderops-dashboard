@@ -232,3 +232,180 @@ td {
     padding-top: 32px;
   }
 }
+
+.attentionPanel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  margin-bottom: 22px;
+  padding: 26px;
+  border: 1px solid rgba(251, 191, 36, 0.22);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at top left, rgba(251, 191, 36, 0.14), transparent 28rem),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.88), rgba(15, 23, 42, 0.62));
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+}
+
+.attentionPanel h2 {
+  margin: 0;
+  font-size: clamp(1.7rem, 4vw, 2.5rem);
+  letter-spacing: -0.05em;
+}
+
+.attentionPanel p {
+  max-width: 680px;
+  margin: 12px 0 0;
+  color: #cbd5e1;
+  line-height: 1.7;
+}
+
+.attentionStats {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.attentionStats div {
+  min-width: 140px;
+  padding: 18px;
+  border: 1px solid rgba(251, 191, 36, 0.18);
+  border-radius: 18px;
+  background: rgba(2, 6, 23, 0.35);
+}
+
+.attentionStats span {
+  display: block;
+  color: #fcd34d;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.attentionStats strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 2rem;
+}
+
+.issueList,
+.listingList {
+  display: grid;
+  gap: 12px;
+  padding: 18px 22px 22px;
+}
+
+.issueCard,
+.listingCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 18px;
+  background: rgba(2, 6, 23, 0.34);
+}
+
+.issueCard h3,
+.issueCard p,
+.listingCard h3,
+.listingCard p {
+  margin: 0;
+}
+
+.issueCard h3,
+.listingCard h3 {
+  margin-top: 10px;
+  font-size: 1rem;
+}
+
+.issueCard p,
+.listingCard p {
+  margin-top: 4px;
+  color: #94a3b8;
+  font-size: 0.88rem;
+}
+
+.issueCard small,
+.listingCard small {
+  display: block;
+  margin-top: 8px;
+  color: #64748b;
+}
+
+.issueTopLine {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge.warning {
+  border-color: rgba(251, 191, 36, 0.28);
+  background: rgba(251, 191, 36, 0.12);
+  color: #fcd34d;
+}
+
+.badge.open {
+  border-color: rgba(248, 113, 113, 0.28);
+  background: rgba(248, 113, 113, 0.12);
+  color: #fca5a5;
+}
+
+.badge.resolved {
+  border-color: rgba(34, 197, 94, 0.28);
+  background: rgba(34, 197, 94, 0.12);
+  color: #86efac;
+}
+
+.issueCard button {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: #2563eb;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.issueCard button:hover {
+  background: #1d4ed8;
+}
+
+.listingRight {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+
+.listingRight strong {
+  color: #f8fafc;
+}
+
+.listingRight small {
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .attentionPanel,
+  .issueCard,
+  .listingCard {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .attentionStats {
+    width: 100%;
+  }
+
+  .attentionStats div {
+    flex: 1;
+  }
+
+  .listingRight {
+    justify-items: start;
+  }
+}

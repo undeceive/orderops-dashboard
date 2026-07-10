@@ -12,6 +12,8 @@ const { PORT } = require("./config/env");
 const { initializeDatabase } = require("./db/schema");
 const productsRoutes = require("./routes/productsRoutes");
 const ordersRoutes = require("./routes/ordersRoutes");
+const listingsRoutes = require("./routes/listingsRoutes");
+const syncIssuesRoutes = require("./routes/syncIssuesRoutes");
 
 const app = express();
 
@@ -29,6 +31,8 @@ app.get("/", (req, res) => {
 
 app.use("/api/products", productsRoutes);
 app.use("/api/orders", ordersRoutes);
+app.use("/api/listings", listingsRoutes);
+app.use("/api/sync-issues", syncIssuesRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({
