@@ -11,6 +11,9 @@ Ideas that may be useful later but are not being built yet.
 - Add real Amazon integration
 - Add real eBay integration
 - Add real Walmart Marketplace integration
+- Add real Zoro marketplace support
+- Add real TopDawg marketplace support
+- Add real Temu marketplace support
 - Add role-based access for employees/admins
 - Add automated scheduled imports
 - Add email alerts for high-severity issues
@@ -23,7 +26,7 @@ Ideas that may be useful later but are not being built yet.
 Features planned for the next version.
 
 - Add Last Import Summary card
-- Support multiple marketplaces in the sample CSV
+- Support multiple marketplaces in sample CSV
 - Add marketplace filter
 - Add issue status filter
 - Add issue severity filter
@@ -38,6 +41,7 @@ Features currently being worked on.
 
 - Improve CSV upload/import workflow
 - Make the dashboard easier to explain to Charles
+- Plan multi-marketplace support
 
 ## Testing
 
@@ -47,6 +51,7 @@ Features that need to be tested before being marked done.
 - Test duplicate prevention after importing the same CSV multiple times
 - Test mobile layout for the dashboard
 - Test resolving issues after CSV import
+- Test CSV rows from different marketplace names
 
 ## Done
 
