@@ -1,15 +1,57 @@
+/**
+ * frontend/src/App.jsx
+ *
+ * Main React frontend for OrderOps Dashboard.
+ *
+ * This page connects to the Express backend and displays:
+ * - product totals
+ * - inventory totals
+ * - order totals
+ * - marketplace listings
+ * - sync issues that need attention
+ *
+ * The frontend does not directly talk to the SQLite database.
+ * It gets all data through the backend API.
+ */
+
 import { useEffect, useState } from "react";
 import "./App.css";
 
+/**
+ * Backend API base URL.
+ *
+ * During local development:
+ * - React/Vite frontend usually runs on http://localhost:5173
+ * - Express backend runs on http://localhost:5000
+ */
 const API_BASE = "http://localhost:5000";
 
 function App() {
+  /**
+   * React state stores the dashboard data after it is loaded
+   * from the backend API.
+   */
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [listings, setListings] = useState([]);
   const [issues, setIssues] = useState([]);
+
+  /**
+   * Status message shown near the top of the dashboard.
+   *
+   * This lets the user know whether the frontend successfully connected
+   * to the backend.
+   */
   const [status, setStatus] = useState("Loading dashboard...");
 
+  /**
+   * loadDashboard()
+   *
+   * Fetches all dashboard data from the backend at the same time.
+   *
+   * Promise.all is used so the app does not wait for each request one by one.
+   * This makes loading faster.
+   */
   async function loadDashboard() {
     try {
       const [productsResponse, ordersResponse, listingsResponse, issuesResponse] =
@@ -20,22 +62,43 @@ function App() {
           fetch(`${API_BASE}/api/sync-issues`),
         ]);
 
+      /**
+       * Convert the API responses into JavaScript objects.
+       */
       const productsData = await productsResponse.json();
       const ordersData = await ordersResponse.json();
       const listingsData = await listingsResponse.json();
       const issuesData = await issuesResponse.json();
 
+      /**
+       * Save the API data into React state.
+       *
+       * The "|| []" fallback prevents the app from crashing if an API response
+       * is missing a list for some reason.
+       */
       setProducts(productsData.products || []);
       setOrders(ordersData.orders || []);
       setListings(listingsData.listings || []);
       setIssues(issuesData.issues || []);
       setStatus("Connected to OrderOps API");
     } catch (error) {
+      /**
+       * If the backend is not running or a request fails,
+       * show a friendly status message instead of a blank page.
+       */
       setStatus("Could not connect to backend API");
       console.error(error);
     }
   }
 
+  /**
+   * resolveIssue()
+   *
+   * Sends a PATCH request to the backend to mark a sync issue as resolved.
+   *
+   * After the issue is updated, the dashboard reloads so the UI shows
+   * the newest data.
+   */
   async function resolveIssue(issueId) {
     try {
       await fetch(`${API_BASE}/api/sync-issues/${issueId}/resolve`, {
@@ -48,26 +111,55 @@ function App() {
     }
   }
 
+  /**
+   * useEffect runs when the page first loads.
+   *
+   * The empty dependency array [] means:
+   * "run this once when the component first appears."
+   */
   useEffect(() => {
     loadDashboard();
   }, []);
 
+  /**
+   * Calculate total inventory across all products.
+   *
+   * Example:
+   * Product A inventory: 12
+   * Product B inventory: 5
+   * Total inventory: 17
+   */
   const totalInventory = products.reduce(
     (sum, product) => sum + Number(product.inventory_count || 0),
     0
   );
 
+  /**
+   * Count orders that are ready to ship.
+   *
+   * This gives Charles/the team a quick operations number.
+   */
   const readyOrders = orders.filter(
     (order) => order.order_status === "Ready to Ship"
   ).length;
 
+  /**
+   * Open issues are issues that have not been resolved.
+   */
   const openIssues = issues.filter((issue) => issue.issue_status !== "Resolved");
+
+  /**
+   * Count listings that have a price mismatch.
+   *
+   * This is pulled from listing.sync_status.
+   */
   const priceMismatches = listings.filter(
     (listing) => listing.sync_status === "Price Mismatch"
   ).length;
 
   return (
     <main className="app">
+      {/* Hero section: title, description, and backend connection status */}
       <section className="hero">
         <p className="eyebrow">Marketplace Operations Dashboard</p>
         <h1>OrderOps Dashboard</h1>
@@ -80,6 +172,7 @@ function App() {
         <div className="statusPill">{status}</div>
       </section>
 
+      {/* Top statistic cards */}
       <section className="statsGrid">
         <div className="statCard">
           <span>Products</span>
@@ -102,6 +195,7 @@ function App() {
         </div>
       </section>
 
+      {/* High-level warning/attention area */}
       <section className="attentionPanel">
         <div>
           <p className="eyebrow">Needs Attention</p>
@@ -124,6 +218,7 @@ function App() {
         </div>
       </section>
 
+      {/* Main dashboard grid: sync issues and marketplace listings */}
       <section className="dashboardGrid">
         <div className="panel">
           <div className="panelHeader">
@@ -158,6 +253,7 @@ function App() {
                   </small>
                 </div>
 
+                {/* Only show the button when the issue is not already resolved */}
                 {issue.issue_status !== "Resolved" && (
                   <button onClick={() => resolveIssue(issue.id)}>
                     Mark Resolved
@@ -202,6 +298,7 @@ function App() {
         </div>
       </section>
 
+      {/* Second dashboard grid: product table and order list */}
       <section className="dashboardGrid">
         <div className="panel">
           <div className="panelHeader">

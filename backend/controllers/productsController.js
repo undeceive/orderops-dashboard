@@ -2,10 +2,30 @@
  * backend/controllers/productsController.js
  *
  * Controller functions for product CRUD operations.
+ *
+ * CRUD means:
+ * - Create
+ * - Read
+ * - Update
+ * - Delete
+ *
+ * These functions are called by the product routes in:
+ * backend/routes/productsRoutes.js
  */
 
 const db = require("../db/database");
 
+/**
+ * GET /api/products
+ *
+ * Fetches all products from the SQLite database.
+ *
+ * The frontend uses this data to show:
+ * - product count
+ * - total inventory
+ * - product table
+ * - image status
+ */
 function getAllProducts(req, res) {
   db.all(
     `
@@ -41,6 +61,13 @@ function getAllProducts(req, res) {
   );
 }
 
+/**
+ * GET /api/products/:id
+ *
+ * Fetches one product by its database ID.
+ *
+ * This is useful if the app later gets a product detail page.
+ */
 function getProductById(req, res) {
   const { id } = req.params;
 
@@ -81,6 +108,23 @@ function getProductById(req, res) {
   );
 }
 
+/**
+ * POST /api/products
+ *
+ * Creates a new internal product record.
+ *
+ * Required fields:
+ * - sku
+ * - product_name
+ *
+ * Optional fields:
+ * - brand
+ * - category
+ * - base_price
+ * - inventory_count
+ * - image_url
+ * - image_status
+ */
 function createProduct(req, res) {
   const {
     sku,
@@ -93,6 +137,12 @@ function createProduct(req, res) {
     image_status,
   } = req.body;
 
+  /**
+   * Basic validation.
+   *
+   * A product needs at least a SKU and product name.
+   * Without these, the product would not be useful for marketplace tracking.
+   */
   if (!sku || !product_name) {
     return res.status(400).json({
       message: "sku and product_name are required",
@@ -131,6 +181,10 @@ function createProduct(req, res) {
         });
       }
 
+      /**
+       * this.lastID is provided by SQLite.
+       * It gives us the database ID of the product that was just created.
+       */
       res.status(201).json({
         message: "Product created",
         product_id: this.lastID,
@@ -139,6 +193,13 @@ function createProduct(req, res) {
   );
 }
 
+/**
+ * PUT /api/products/:id
+ *
+ * Updates an existing product.
+ *
+ * This replaces the product fields with the values sent in the request body.
+ */
 function updateProduct(req, res) {
   const { id } = req.params;
 
@@ -193,6 +254,10 @@ function updateProduct(req, res) {
         });
       }
 
+      /**
+       * this.changes tells us how many database rows were updated.
+       * If it is 0, the product ID did not exist.
+       */
       if (this.changes === 0) {
         return res.status(404).json({
           message: "Product not found",
@@ -207,6 +272,14 @@ function updateProduct(req, res) {
   );
 }
 
+/**
+ * DELETE /api/products/:id
+ *
+ * Deletes a product by ID.
+ *
+ * In a real company version, we may want to archive products instead
+ * of permanently deleting them.
+ */
 function deleteProduct(req, res) {
   const { id } = req.params;
 

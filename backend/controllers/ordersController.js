@@ -2,10 +2,24 @@
  * backend/controllers/ordersController.js
  *
  * Controller functions for marketplace orders.
+ *
+ * A controller receives the request from the route file,
+ * talks to the database, and sends a response back to the frontend.
  */
 
 const db = require("../db/database");
 
+/**
+ * GET /api/orders
+ *
+ * Fetches all marketplace orders from the database.
+ *
+ * The frontend uses this data to show:
+ * - total order count
+ * - order marketplace
+ * - order status
+ * - order total
+ */
 function getAllOrders(req, res) {
   db.all(
     `
@@ -38,6 +52,13 @@ function getAllOrders(req, res) {
   );
 }
 
+/**
+ * GET /api/orders/:id
+ *
+ * Fetches one order by its database ID.
+ *
+ * This is useful if the app later gets an order detail page.
+ */
 function getOrderById(req, res) {
   const { id } = req.params;
 
@@ -75,6 +96,20 @@ function getOrderById(req, res) {
   );
 }
 
+/**
+ * POST /api/orders
+ *
+ * Creates a new marketplace order.
+ *
+ * Required fields:
+ * - marketplace
+ * - marketplace_order_id
+ *
+ * Optional fields:
+ * - customer_name
+ * - order_status
+ * - total_amount
+ */
 function createOrder(req, res) {
   const {
     marketplace,

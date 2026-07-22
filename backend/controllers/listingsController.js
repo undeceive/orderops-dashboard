@@ -2,10 +2,25 @@
  * backend/controllers/listingsController.js
  *
  * Controller functions for marketplace listings.
+ *
+ * A marketplace listing is the version of a product that appears
+ * on a sales channel like Walmart, Amazon, eBay, or Shopify.
  */
 
 const db = require("../db/database");
 
+/**
+ * GET /api/listings
+ *
+ * Fetches all marketplace listings and joins each listing
+ * with its related internal product.
+ *
+ * This lets the frontend compare:
+ * - internal SKU vs marketplace SKU
+ * - internal price vs listing price
+ * - internal inventory vs listing inventory
+ * - product image status
+ */
 function getAllListings(req, res) {
   db.all(
     `
@@ -48,6 +63,23 @@ function getAllListings(req, res) {
   );
 }
 
+/**
+ * POST /api/listings
+ *
+ * Creates a new marketplace listing connected to an existing product.
+ *
+ * Required fields:
+ * - product_id
+ * - marketplace
+ *
+ * Optional fields:
+ * - marketplace_sku
+ * - listing_url
+ * - listing_price
+ * - listing_inventory
+ * - listing_status
+ * - sync_status
+ */
 function createListing(req, res) {
   const {
     product_id,

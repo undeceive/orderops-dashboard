@@ -2,10 +2,23 @@
  * backend/controllers/syncIssuesController.js
  *
  * Controller functions for product/listing sync issues.
+ *
+ * Sync issues are problems that need attention, such as:
+ * - Price Mismatch
+ * - Inventory Mismatch
+ * - Missing Image
+ * - Active Listing With No Stock
  */
 
 const db = require("../db/database");
 
+/**
+ * GET /api/sync-issues
+ *
+ * Fetches all sync issues and joins them with product/listing data.
+ *
+ * The frontend uses this for the "Needs Attention" section.
+ */
 function getAllSyncIssues(req, res) {
   db.all(
     `
@@ -52,6 +65,11 @@ function getAllSyncIssues(req, res) {
   );
 }
 
+/**
+ * POST /api/sync-issues
+ *
+ * Creates a new issue that the team needs to review.
+ */
 function createSyncIssue(req, res) {
   const {
     product_id,
@@ -104,6 +122,13 @@ function createSyncIssue(req, res) {
   );
 }
 
+/**
+ * PATCH /api/sync-issues/:id/resolve
+ *
+ * Marks an issue as resolved.
+ *
+ * This is used by the frontend "Mark Resolved" button.
+ */
 function resolveSyncIssue(req, res) {
   const { id } = req.params;
 

@@ -3,15 +3,35 @@
  *
  * Defines the database tables for OrderOps Dashboard.
  *
- * OrderOps is a marketplace sync dashboard inspired by a real business idea:
- * keeping product listings, prices, inventory, images, and platform statuses
- * consistent across multiple e-commerce sales channels.
+ * OrderOps is a marketplace sync dashboard inspired by real e-commerce work:
+ * keeping product listings, prices, inventory, images, and marketplace statuses
+ * consistent across sales channels like Walmart, Amazon, eBay, and Shopify.
  */
 
 const db = require("./database");
 
+/**
+ * initializeDatabase()
+ *
+ * Creates all required tables if they do not already exist.
+ *
+ * This lets the app start safely even when the SQLite database file is new.
+ */
 function initializeDatabase() {
   db.serialize(() => {
+    /**
+     * products
+     *
+     * Stores the internal product record.
+     *
+     * This is the company-side view of a product:
+     * - SKU
+     * - product name
+     * - brand/category
+     * - base price
+     * - inventory count
+     * - image status
+     */
     db.run(`
       CREATE TABLE IF NOT EXISTS products (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,6 +52,21 @@ function initializeDatabase() {
       )
     `);
 
+    /**
+     * marketplace_listings
+     *
+     * Stores the marketplace version of a product.
+     *
+     * Example:
+     * One product can have separate listings on:
+     * - Walmart
+     * - Amazon
+     * - eBay
+     * - Shopify
+     *
+     * This table lets us compare marketplace price/inventory/status
+     * against the internal product record.
+     */
     db.run(`
       CREATE TABLE IF NOT EXISTS marketplace_listings (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,6 +90,19 @@ function initializeDatabase() {
       )
     `);
 
+    /**
+     * sync_issues
+     *
+     * Stores problems that need attention.
+     *
+     * Examples:
+     * - Price Mismatch
+     * - Inventory Mismatch
+     * - Missing Image
+     * - Active Listing With No Stock
+     *
+     * This is what makes the dashboard useful as a daily work board.
+     */
     db.run(`
       CREATE TABLE IF NOT EXISTS sync_issues (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -75,6 +123,17 @@ function initializeDatabase() {
       )
     `);
 
+    /**
+     * orders
+     *
+     * Stores marketplace orders that need tracking.
+     *
+     * This can help identify orders that are:
+     * - pending
+     * - ready to ship
+     * - shipped
+     * - delayed
+     */
     db.run(`
       CREATE TABLE IF NOT EXISTS orders (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -90,7 +149,6 @@ function initializeDatabase() {
         updated_at TEXT DEFAULT CURRENT_TIMESTAMP
       )
     `);
-
   });
 }
 
