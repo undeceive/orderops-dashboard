@@ -37,6 +37,18 @@ function App() {
   const [issues, setIssues] = useState([]);
 
   /**
+   * Stores the CSV file selected by the user.
+   *
+   * This is uploaded to the backend import endpoint.
+   */
+  const [csvFile, setCsvFile] = useState(null);
+
+  /**
+   * Shows a message after CSV import succeeds or fails.
+   */
+  const [importStatus, setImportStatus] = useState("");
+
+  /**
    * Status message shown near the top of the dashboard.
    *
    * This lets the user know whether the frontend successfully connected
@@ -99,6 +111,49 @@ function App() {
    * After the issue is updated, the dashboard reloads so the UI shows
    * the newest data.
    */
+  /**
+   * Uploads a CSV file to the backend import endpoint.
+   *
+   * The backend reads the file, updates products/listings,
+   * creates sync issues, and prevents duplicate open issues.
+   */
+  async function handleCsvUpload(event) {
+    event.preventDefault();
+
+    if (!csvFile) {
+      setImportStatus("Please choose a CSV file first.");
+      return;
+    }
+
+    try {
+      setImportStatus("Importing CSV...");
+
+      const formData = new FormData();
+      formData.append("file", csvFile);
+
+      const response = await fetch(`${API_BASE}/api/import/listings`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || result.message || "CSV import failed");
+      }
+
+      setImportStatus(
+        `CSV imported: ${result.rows} rows, ${result.createdIssues} new issues created.`
+      );
+
+      setCsvFile(null);
+      await loadDashboard();
+    } catch (error) {
+      setImportStatus(`Import failed: ${error.message}`);
+      console.error(error);
+    }
+  }
+
   async function resolveIssue(issueId) {
     try {
       await fetch(`${API_BASE}/api/sync-issues/${issueId}/resolve`, {
@@ -173,6 +228,33 @@ function App() {
       </section>
 
       {/* Top statistic cards */}
+      <section className="importPanel">
+        <div>
+          <p className="eyebrow">CSV Import</p>
+          <h2>Upload marketplace listing data</h2>
+          <p>
+            Import a Walmart-style CSV to update products, update listings, and
+            automatically create sync issues for price, inventory, or image
+            problems.
+          </p>
+        </div>
+
+        <form className="importForm" onSubmit={handleCsvUpload}>
+          <label className="filePicker">
+            <span>{csvFile ? csvFile.name : "Choose CSV file"}</span>
+            <input
+              type="file"
+              accept=".csv,text/csv"
+              onChange={(event) => setCsvFile(event.target.files[0] || null)}
+            />
+          </label>
+
+          <button type="submit">Import CSV</button>
+
+          {importStatus && <p className="importStatus">{importStatus}</p>}
+        </form>
+      </section>
+
       <section className="statsGrid">
         <div className="statCard">
           <span>Products</span>

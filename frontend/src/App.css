@@ -409,3 +409,81 @@ td {
     justify-items: start;
   }
 }
+
+/* CSV import panel */
+.importPanel {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 24px;
+  align-items: center;
+  margin: 0 auto 28px;
+  padding: 28px;
+  max-width: 1180px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.72);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+}
+
+.importPanel h2 {
+  margin: 6px 0 10px;
+}
+
+.importPanel p {
+  margin: 0;
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+.importForm {
+  display: grid;
+  gap: 12px;
+}
+
+.filePicker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
+  padding: 14px 16px;
+  border: 1px dashed rgba(148, 163, 184, 0.45);
+  border-radius: 16px;
+  color: #e2e8f0;
+  background: rgba(2, 6, 23, 0.42);
+  cursor: pointer;
+  text-align: center;
+}
+
+.filePicker input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.importForm button {
+  min-height: 48px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #7c3aed, #2563eb);
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.importForm button:hover {
+  transform: translateY(-1px);
+}
+
+.importStatus {
+  font-size: 0.9rem;
+  color: #cbd5e1 !important;
+}
+
+@media (max-width: 760px) {
+  .importPanel {
+    grid-template-columns: 1fr;
+    padding: 22px;
+  }
+}
