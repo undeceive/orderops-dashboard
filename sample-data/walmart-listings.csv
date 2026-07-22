@@ -1,0 +1,4 @@
+sku,product_name,brand,category,base_price,inventory_count,marketplace,marketplace_sku,listing_url,listing_price,listing_inventory,listing_status,image_status
+HYW-TEST-001,Test Welding Product,HYW,Welding Supplies,29.99,12,Walmart,HYW-TEST-001-WM,https://marketplace.example.com/walmart/HYW-TEST-001,31.99,10,Active,Valid
+HYW-TEST-002,Ground Clamp Heavy Duty,HYW,Welding Supplies,19.99,0,Walmart,HYW-TEST-002-WM,https://marketplace.example.com/walmart/HYW-TEST-002,19.99,5,Active,Missing
+HYW-TEST-003,Welding Nozzle Kit,HYW,Welding Supplies,14.99,20,Walmart,HYW-TEST-003-WM,https://marketplace.example.com/walmart/HYW-TEST-003,14.99,20,Active,Valid

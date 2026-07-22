@@ -24,6 +24,7 @@ const productsRoutes = require("./routes/productsRoutes");
 const ordersRoutes = require("./routes/ordersRoutes");
 const listingsRoutes = require("./routes/listingsRoutes");
 const syncIssuesRoutes = require("./routes/syncIssuesRoutes");
+const importRoutes = require("./routes/importRoutes");
 
 // Create the Express app.
 const app = express();
@@ -73,6 +74,7 @@ app.use("/api/products", productsRoutes);
 app.use("/api/orders", ordersRoutes);
 app.use("/api/listings", listingsRoutes);
 app.use("/api/sync-issues", syncIssuesRoutes);
+app.use("/api/import", importRoutes);
 
 /**
  * Health check route.
