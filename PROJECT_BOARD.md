@@ -32,7 +32,6 @@ Features planned for the next version.
 - Add issue severity filter
 - Add search by SKU or product name
 - Add export report button
-- Add README screenshots
 - Add project explanation for portfolio
 
 ## In Progress
@@ -54,6 +53,8 @@ Features that need to be tested before being marked done.
 - Test CSV rows from different marketplace names
 
 ## Done
+
+- Added README screenshots
 
 Completed features.
 
