@@ -49,6 +49,14 @@ function App() {
   const [importStatus, setImportStatus] = useState("");
 
   /**
+   * Stores the result from the most recent CSV import.
+   *
+   * This lets the dashboard show a small summary card after an import,
+   * instead of only showing a plain text success message.
+   */
+  const [lastImportSummary, setLastImportSummary] = useState(null);
+
+  /**
    * Status message shown near the top of the dashboard.
    *
    * This lets the user know whether the frontend successfully connected
@@ -122,11 +130,13 @@ function App() {
 
     if (!csvFile) {
       setImportStatus("Please choose a CSV file first.");
+      setLastImportSummary(null);
       return;
     }
 
     try {
       setImportStatus("Importing CSV...");
+      setLastImportSummary(null);
 
       const formData = new FormData();
       formData.append("file", csvFile);
@@ -145,6 +155,13 @@ function App() {
       setImportStatus(
         `CSV imported: ${result.rows} rows, ${result.createdIssues} new issues created.`
       );
+
+      setLastImportSummary({
+        rows: result.rows,
+        importedProducts: result.importedProducts,
+        importedListings: result.importedListings,
+        createdIssues: result.createdIssues,
+      });
 
       setCsvFile(null);
       await loadDashboard();
@@ -253,6 +270,34 @@ function App() {
 
           {importStatus && <p className="importStatus">{importStatus}</p>}
         </form>
+
+        {lastImportSummary && (
+          <div className="lastImportCard">
+            <p className="eyebrow">Last Import Summary</p>
+
+            <div className="lastImportGrid">
+              <div>
+                <span>Rows Imported</span>
+                <strong>{lastImportSummary.rows}</strong>
+              </div>
+
+              <div>
+                <span>Products Processed</span>
+                <strong>{lastImportSummary.importedProducts}</strong>
+              </div>
+
+              <div>
+                <span>Listings Processed</span>
+                <strong>{lastImportSummary.importedListings}</strong>
+              </div>
+
+              <div>
+                <span>New Issues Created</span>
+                <strong>{lastImportSummary.createdIssues}</strong>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       <section className="statsGrid">
