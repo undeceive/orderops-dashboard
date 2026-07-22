@@ -25,7 +25,6 @@ Ideas that may be useful later but are not being built yet.
 
 Features planned for the next version.
 
-- Add Last Import Summary card
 - Support multiple marketplaces in sample CSV
 - Add marketplace filter
 - Add issue status filter
@@ -53,6 +52,8 @@ Features that need to be tested before being marked done.
 - Test CSV rows from different marketplace names
 
 ## Done
+
+- Added Last Import Summary card
 
 - Added README screenshots
 
