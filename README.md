@@ -166,3 +166,14 @@ See PROJECT_BOARD.md.
 This project currently uses sample data and local SQLite storage. It does not connect to real company marketplace accounts yet.
 
 Future versions could add real integrations for Shopify, Amazon, eBay, Walmart Marketplace, Zoro, TopDawg, and Temu.
+
+## Screenshots
+
+### Dashboard Overview
+
+![OrderOps Dashboard Overview](docs/screenshots/orderops-dashboard.png)
+
+### Full Dashboard View
+
+![OrderOps Full Dashboard](docs/screenshots/orderops-full-page.png)
+
